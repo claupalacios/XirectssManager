@@ -1,26 +1,19 @@
+using AccountMS.Helpers;
+using AccountMS.Models;
+using AccountMS.Repositories;
+using AccountMS.Repositories.Interfaces;
+using AccountMS.Services;
+using AccountMS.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UserMS.Helpers;
-using UserMS.Models;
-using UserMS.Repositories;
-using UserMS.Repositories.Interfaces;
-using UserMS.Services;
-using UserMS.Services.Interfaces;
 
-namespace UserMS
+namespace AccountMS
 {
     public class Startup
     {
@@ -29,8 +22,8 @@ namespace UserMS
             Configuration = configuration;
 
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger();
+            .ReadFrom.Configuration(Configuration)
+            .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -38,8 +31,8 @@ namespace UserMS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserDBContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("UserMSDatabase")));
+            services.AddDbContext<AccountDBContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("AccountMSDatabase")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -47,15 +40,15 @@ namespace UserMS
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "UserMS V1",
+                    Title = "AccountMS V1",
                 });
             });
 
             //Repository Contracts
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
 
             //Services Contracts
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             //Mapper profile
             services.AddAutoMapper(cfg =>
